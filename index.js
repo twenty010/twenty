@@ -67,6 +67,7 @@ server.listen(PORT, () => {
 	* Follow https://github.com/nazedev
 	* Whatsapp : https://whatsapp.com/channel/0029VaWOkNm7DAWtkvkJBK43
 */
+const { jidNormalizedUser } = require('@whiskeysockets/baileys');
 
 async function startNazeBot() {
 	const { state, saveCreds } = await useMultiFileAuthState('nazedev');
@@ -346,5 +347,6 @@ fs.watchFile(file, () => {
 	delete require.cache[file]
 	require(file)
 });
+
 
 
