@@ -70,7 +70,7 @@ const database = dataBase(global.tempatDB);
 const msgRetryCounterCache = new NodeCache();
 
 assertInstalled(process.platform === 'win32' ? 'where ffmpeg' : 'command -v ffmpeg', 'FFmpeg', 0);
-console.log(chalk.greenBright('✅  All external dependencies are satisfied'));
+console.log(chalk.greenBright('✅ تم تلبية جميع التبعيات الخارجية'));
 console.log(chalk.green.bold(`╔═════[${`${chalk.cyan(userInfoSyt())}@${chalk.cyan(os.hostname())}`}]═════`));
 print('OS', `${os.platform()} ${os.release()} ${os.arch()}`);
 print('Uptime', `${Math.floor(os.uptime() / 3600)} h ${Math.floor((os.uptime() % 3600) / 60)} m`);
@@ -82,12 +82,12 @@ print('Node.js', process.version);
 print('Baileys', `v${require('./package.json').dependencies.baileys}`);
 print('Date & Time', new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta', hour12: false }));
 console.log(chalk.green.bold('╚' + ('═'.repeat(30))));
-server.listen(PORT, () => {
+server.listen(PORT, () => {twenty
   console.log('App listened on port', PORT);
 });
 
 async function startNazeBot() {
-  const { state, saveCreds } = await useMultiFileAuthState('nazedev');
+  const { state, saveCreds } = await useMultiFileAuthState('');
   const { version, isLatest } = await fetchLatestBaileysVersion();
   const level = pino({ level: 'silent' });
   
@@ -146,7 +146,7 @@ async function startNazeBot() {
       return msg?.message || ''
     }
     return {
-      conversation: 'Halo Saya Naze Bot'
+      conversation: 'مرحباً أنا TWENTY بوت'
     }
   }
   
@@ -205,7 +205,7 @@ async function startNazeBot() {
     (async () => {
       try {
         await getPhoneNumber();
-        await exec('rm -rf ./nazedev/*');
+        await exec('rm -rf ./twenty/*');
         console.log('Waiting for pairing code...\n' + chalk.blueBright('Estimated time: around 2 ~ 5 minutes'));
       } catch (error) {
         console.error('Error during phone number input:', error);
@@ -232,16 +232,16 @@ async function startNazeBot() {
     if (connection === 'close') {
       const reason = new Boom(lastDisconnect?.error)?.output.statusCode
       if (reason === DisconnectReason.connectionLost) {
-        console.log('Connection to Server Lost, Attempting to Reconnect...');
+        console.log('تم فقدان الاتصال بالخادم، جاري محاولة إعادة الاتصال...');
         startNazeBot()
       } else if (reason === DisconnectReason.connectionClosed) {
-        console.log('Connection closed, Attempting to Reconnect...');
+        console.log('تم إغلاق الاتصال، جاري محاولة إعادة الاتصال...');
         startNazeBot()
       } else if (reason === DisconnectReason.restartRequired) {
-        console.log('Restart Required...');
+        console.log('مطلوب إعادة التشغيل...');
         startNazeBot()
       } else if (reason === DisconnectReason.timedOut) {
-        console.log('Connection Timed Out, Attempting to Reconnect...');
+        console.log('انتهت مهلة الاتصال، جاري محاولة إعادة الاتصال...');
         startNazeBot()
       } else if (reason === DisconnectReason.badSession) {
         console.log('Delete Session and Scan again...');
@@ -250,22 +250,22 @@ async function startNazeBot() {
         console.log('Close current Session first...');
       } else if (reason === DisconnectReason.loggedOut) {
         console.log('Scan again and Run...');
-        exec('rm -rf ./nazedev/*')
+        exec('rm -rf ./twenty/*')
         process.exit(1)
       } else if (reason === DisconnectReason.forbidden) {
         console.log('Connection Failure, Scan again and Run...');
-        exec('rm -rf ./nazedev/*')
+        exec('rm -rf ./twenty/*')
         process.exit(1)
       } else if (reason === DisconnectReason.multideviceMismatch) {
         console.log('Scan again...');
-        exec('rm -rf ./nazedev/*')
+        exec('rm -rf ./twenty/*')
         process.exit(0)
       } else {
         naze.end(`Unknown DisconnectReason : ${reason}|${connection}`)
       }
     }
     if (connection == 'open') {
-      console.log('Connected to : ' + JSON.stringify(naze.user, null, 2));
+      console.log('متصل بـ : ' + JSON.stringify(naze.user, null, 2));
       let botNumber = await naze.decodeJid(naze.user.id);
       if (global.db?.set[botNumber] && !global.db?.set[botNumber]?.join) {
         if (my.ch.length > 0 && my.ch.includes('@newsletter')) {
@@ -281,9 +281,9 @@ async function startNazeBot() {
         res.end(await toBuffer(qr))
       });
     }
-    if (isNewLogin) console.log(chalk.green('New device login detected...'))
+    if (isNewLogin) console.log(chalk.green('تم اكتشاف تسجيل دخول جهاز جديد...'))
     if (receivedPendingNotifications == 'true') {
-      console.log('Please wait About 1 Minute...')
+      console.log('الرجاء الانتظار لمدة دقيقة واحدة تقريبًا...')
       naze.ev.flush()
     }
   });
@@ -313,7 +313,7 @@ async function startNazeBot() {
     if (global.db?.set[botNumber]?.anticall) {
       for (let id of call) {
         if (id.status === 'offer') {
-          let msg = await naze.sendMessage(id.from, { text: `Saat Ini, Kami Tidak Dapat Menerima Panggilan ${id.isVideo ? 'Video' : 'Suara'}.\nJika @${id.from.split('@')[0]} Memerlukan Bantuan, Silakan Hubungi Owner :)`, mentions: [id.from]});
+          let msg = await naze.sendMessage(id.from, { text: `حاليًا، لا يمكننا قبول المكالمات ${id.isVideo ? 'Video' : 'Suara'}.\nJika @${id.from.split('@')[0]} بحاجة إلى مساعدة، يرجى الاتصال بالمالك:)`, mentions: [id.from]});
           await naze.sendContact(id.from, global.owner, msg);
           await naze.rejectCall(id.id, id.from)
         }
