@@ -67,7 +67,6 @@ server.listen(PORT, () => {
 	* Follow https://github.com/nazedev
 	* Whatsapp : https://whatsapp.com/channel/0029VaWOkNm7DAWtkvkJBK43
 */
-const { jidNormalizedUser } = require('@whiskeysockets/baileys');
 
 async function startNazeBot() {
 	const { state, saveCreds } = await useMultiFileAuthState('nazedev');
@@ -144,7 +143,6 @@ async function startNazeBot() {
 		connectTimeoutMs: 60000,
 		browser: Browsers.ubuntu('Chrome'),
 		generateHighQualityLinkPreview: true,
-		cachedGroupMetadata: async (jid) => store.groupMetadata(jid),
 		shouldSyncHistoryMessage: msg => {
 			console.log(`\x1b[32mMemuat Chat [${msg.progress || 0}%]\x1b[39m`);
 			return !!msg.syncType;
@@ -347,6 +345,4 @@ fs.watchFile(file, () => {
 	delete require.cache[file]
 	require(file)
 });
-
-
 
