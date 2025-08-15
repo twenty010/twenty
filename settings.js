@@ -38,7 +38,7 @@ global.fake = {
 global.my = {
 	yt: 'https://youtube.com/c/Nazedev',
 	gh: 'https://github.com/twenty010',
-	gc: 'https://whatsapp.com/channel/0029VanxrUxJK76S93pdS2I',
+	gc: 'https://chat.whatsapp.com/B5qJIwZHm4VEYZJQE6iMwy',
 	ch: '120363250409960161@newsletter',
 }
 
