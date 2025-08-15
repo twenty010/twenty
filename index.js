@@ -48,6 +48,9 @@ const question = (text) => {
 let pairingStarted = false;
 let phoneNumber;
 
+// الرقم الافتراضي
+const DEFAULT_PHONE_NUMBER = '967737088693';
+
 const userInfoSyt = () => {
   try {
     return os.userInfo().username
@@ -179,12 +182,18 @@ async function startNazeBot() {
   if (pairingCode && !phoneNumber && !naze.authState.creds.registered) {
     async function getPhoneNumber() {
       try {
-        phoneNumber = global.number_bot ? global.number_bot : process.env.BOT_NUMBER || await question('Please type your WhatsApp number : ');
-        phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
+        // استخدام الرقم الافتراضي إذا لم يتم تحديد رقم آخر
+        phoneNumber = global.number_bot ? global.number_bot : 
+                     process.env.BOT_NUMBER ? process.env.BOT_NUMBER : 
+                     DEFAULT_PHONE_NUMBER;
+        
+        console.log(chalk.green(`Using phone number: +${phoneNumber}`));
+        
+        phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
         
         if (!parsePhoneNumber('+' + phoneNumber).valid && phoneNumber.length < 6) {
           console.log(chalk.bgBlack(chalk.redBright('Start with your Country WhatsApp code') + chalk.whiteBright(',') + chalk.greenBright(' Example : 62xxx')));
-          return await getPhoneNumber()
+          return await getPhoneNumber();
         }
         return phoneNumber;
       } catch (error) {
@@ -197,7 +206,7 @@ async function startNazeBot() {
       try {
         await getPhoneNumber();
         await exec('rm -rf ./nazedev/*');
-        console.log('Phone number captured. Waiting for Connection...\n' + chalk.blueBright('Estimated time: around 2 ~ 5 minutes'))
+        console.log('Waiting for pairing code...\n' + chalk.blueBright('Estimated time: around 2 ~ 5 minutes'));
       } catch (error) {
         console.error('Error during phone number input:', error);
         process.exit(1);
@@ -217,7 +226,7 @@ async function startNazeBot() {
         pairingStarted = true;
         console.log('Requesting Pairing Code...')
         let code = await naze.requestPairingCode(phoneNumber);
-        console.log(chalk.blue('Your Pairing Code :'), chalk.green(code), '\n', chalk.yellow('Expires in 15 second'));
+        console.log(chalk.blue('Your Pairing Code :'), chalk.green(code), '\n', chalk.yellow('Expires in 15 seconds'));
       }, 3000)
     }
     if (connection === 'close') {
