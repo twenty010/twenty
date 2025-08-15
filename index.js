@@ -22,7 +22,15 @@ const { isUrl, generateMessageTag, getBuffer, getSizeMedia, fetchJson, assertIns
 const print = (label, value) => console.log(`${chalk.green.bold('║')} ${chalk.cyan.bold(label.padEnd(16))}${chalk.yellow.bold(':')} ${value}`);
 const pairingCode = process.argv.includes('--qr') ? false : process.argv.includes('--pairing-code') || global.pairing_code;
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-const question = (text) => new Promise((resolve) => rl.question(text, resolve))
+// تأكد من أنك لا تغلق واجهة readline (rl.close()) قبل الانتهاء من جميع الأسئلة
+async function question(prompt) {
+  return new Promise((resolve) => {
+    rl.question(prompt, (answer) => {
+      resolve(answer);
+      // لا تقم بإغلاق rl هنا إذا كنت بحاجة لاستخدامها لاحقًا
+    });
+  });
+}
 let pairingStarted = false;
 let phoneNumber;
 
@@ -345,4 +353,5 @@ fs.watchFile(file, () => {
 	delete require.cache[file]
 	require(file)
 });
+
 
